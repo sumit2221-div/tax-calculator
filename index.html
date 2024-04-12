@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+<title>Tax Calculation Form</title>
+
+<script>
+  function calculateTax() {
+    var grossIncome = parseFloat(document.getElementById('gross-income').value) || 0;
+    var extraIncome = parseFloat(document.getElementById('extra-income').value) || 0;
+    var deductions = parseFloat(document.getElementById('deductions').value) || 0;
+    var ageGroup = document.getElementById('age-group').value;
+    var taxableIncome = grossIncome + extraIncome - deductions;
+    var tax = 0;
+    var netIncome = 0;
+
+    if (!ageGroup) {
+      document.getElementById('age-error').classList.add('error-visible');
+      return;
+    } else {
+      document.getElementById('age-error').classList.remove('error-visible');
+    }
+
+    if (taxableIncome > 8) {
+      switch(ageGroup) {
+        case '<40':
+          tax = 0.3 * (taxableIncome - 8);
+          break;
+        case '40-59':
+          tax = 0.4 * (taxableIncome - 8);
+          break;
+        case '60+':
+          tax = 0.1 * (taxableIncome - 8);
+          break;
+      }
+    }
+
+    netIncome = taxableIncome - tax;
+
+    var resultBox = document.getElementById('result-box');
+    resultBox.innerHTML = 'Your overall income will be:<br>₹' + netIncome.toFixed(2) + '<br>after tax deduction.<br><button onclick="closeResult()">Close</button>';
+    resultBox.style.display = 'block';
+  }
+
+  function closeResult() {
+    var resultBox = document.getElementById('result-box');
+    resultBox.innerHTML = ''; 
+    resultBox.style.display = 'none'; 
+  }
+</script>
+
+<style>
+  
+</style>
+
+</head>
+<body>
+
+<div class="container">
+  <h1>Tax Calculation Form</h1>
+  <form onsubmit="event.preventDefault(); calculateTax();">
+    <div class="input-container">
+      <label for="gross-income">Gross Annual Income:</label>
+    
+      <button type="button" class="detail-btn" >?</button>
+      <div class="detail-box"> gross annual income is your <br> total salary of a year   </div>
+   
+      <input type="text" id="gross-income" required>
+      <button type="button" class="detail-btn">?</button>
+      <div class="detail-box"> please enter number only</div>
+     
+    </div>
+    <div class="input-container">
+      <label for="extra-income">Extra Income:</label>
+     
+      <button type="button" class="detail-btn">?</button>
+      <div class="detail-box"> extra income is your any other income except salary</div>
+     
+      <input type="text" id="extra-income" required>
+      <button type="button" class="detail-btn">?</button>
+      <div class="detail-box"> please enter number only</div>
+     
+    </div>
+    <div class="input-container">
+      <label for="deductions">Deductions:</label>
+    
+      <button type="button" class="detail-btn">?</button>
+
+      <div class="detail-box">This is any deductions made.</div>
+    
+      <input type="text" id="deductions" required>
+      <button type="button" class="detail-btn">?</button>
+      <div class="detail-box"> please enter number only</div>
+     
+    </div>
+    <label for="age-group">Age Group:</label>
+    <select id="age-group" required>
+      <option value="">Select Age Group</option>
+      <option value="40">Less than 40</option>
+      <option value="40-59">40 to 59</option>
+      <option value="60+">60 and above</option>
+    </select>
+    <span class="error-icon" id="age-error">!</span>
+
+    <button class="cal-btn" type="submit">Calculate</button>
+  </form>
+</div>
+
+<div class="result-box" id="result-box"></div>
+
+</body>
+</html>
